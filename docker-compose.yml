@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16
+    container_name: genzid-postgres
+    environment:
+      POSTGRES_USER: genzid
+      POSTGRES_PASSWORD: genzid
+      POSTGRES_DB: genzid
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U genzid -d genzid"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:latest
+    container_name: genzid-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
